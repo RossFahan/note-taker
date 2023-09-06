@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const uuid = require('./helpers/uuid');
 
 const PORT = 3001;
 
@@ -18,6 +19,12 @@ app.get('/notes', (req, res) => {
   // Route for index.html
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  });
+
+  // Route for all notes
+app.get('/api/notes', (req, res) => {
+    const notesData = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'db.json')));
+    res.json(notesData);
   });
 
 app.listen(PORT, () =>
