@@ -16,11 +16,6 @@ app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'notes.html'));
 });
 
-// Route for index.html
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
 // Route for all notes
 app.get('/api/notes', (req, res) => {
     const notesData = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'db.json')));
@@ -60,6 +55,11 @@ app.delete('/api/notes/:id', (req, res) => {
     fs.writeFileSync(path.join(__dirname, 'db', 'db.json'), JSON.stringify(newNotesData));
 
     res.json(newNotesData);
+});
+
+// Route for index.html
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, () =>
