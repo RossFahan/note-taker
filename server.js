@@ -14,19 +14,37 @@ app.use(express.urlencoded({ extended: true }));
 // Route for the notes page
 app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'notes.html'));
-  });
+});
 
-  // Route for index.html
+// Route for index.html
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  });
+});
 
-  // Route for all notes
+// Route for all notes
 app.get('/api/notes', (req, res) => {
     const notesData = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'db.json')));
     res.json(notesData);
-  });
+});
+
+// route to save a new note
+app.post('/api/notes', (req, res) => {
+    const notesData = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'db.json')));
+    const newNote = {
+        id: uuid(), 
+        title: req.body.title,
+        text: req.body.text,
+    };
+
+    // Push the new note to notesData
+    notesData.push(newNote);
+
+    // Write the updated notes array back to the database
+    fs.writeFileSync(path.join(__dirname, 'db', 'db.json'), JSON.stringify(notesData));
+
+    res.json(newNote);
+});
 
 app.listen(PORT, () =>
-  console.log(`App listening at http://localhost:${PORT}`)
+    console.log(`App listening at http://localhost:${PORT}`)
 );
