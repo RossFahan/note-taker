@@ -45,6 +45,23 @@ app.post('/api/notes', (req, res) => {
     res.json(newNote);
 });
 
+// Route to delete a note
+app.delete('/api/notes/:id', (req, res) => {
+
+    // Get the id of the note to delete
+    const noteId = req.params.id;
+    const notesData = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'db.json')));
+
+
+    // Filter out the note with the matching id
+    const newNotesData = notesData.filter(note => note.id !== noteId);
+
+    // Write the updated notes data back to the database
+    fs.writeFileSync(path.join(__dirname, 'db', 'db.json'), JSON.stringify(newNotesData));
+
+    res.json(newNotesData);
+});
+
 app.listen(PORT, () =>
     console.log(`App listening at http://localhost:${PORT}`)
 );
